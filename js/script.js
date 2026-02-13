@@ -9,6 +9,8 @@ import {
   descargarJSON,
 } from "./libreria.js";
 
+let tipsNuevosAcumulados = [];
+
 document.addEventListener("DOMContentLoaded", async () => {
   await cargarTips();
   configurarBuscador();
@@ -28,21 +30,23 @@ function configurarFormularioAgregar() {
   const btnDesplegar = document.getElementById("btn-desplegar-agregar");
   const formContainer = document.getElementById("form-agregar-container");
   const btnCancelar = document.getElementById("btn-cancelar-agregar");
-  const btnDescargar = document.getElementById("btn-descargar-json");
+  const btnAgregar = document.getElementById("btn-descargar-json");
   const inputNombre = document.getElementById("nuevo-nombre");
   const inputUrl = document.getElementById("nueva-url");
   const inputBuscador = document.getElementById("buscador");
 
   btnDesplegar.addEventListener("click", () => {
     formContainer.classList.toggle("hidden");
+    tipsNuevosAcumulados = [];
   });
 
   btnCancelar.addEventListener("click", () => {
     formContainer.classList.add("hidden");
     limpiarFormulario();
+    tipsNuevosAcumulados = [];
   });
 
-  btnDescargar.addEventListener("click", () => {
+  btnAgregar.addEventListener("click", () => {
     const nombre = inputNombre.value.trim();
     const url = inputUrl.value.trim();
 
@@ -51,20 +55,28 @@ function configurarFormularioAgregar() {
       return;
     }
 
-    const nuevoTip = { nombre, url };
+    // 1. Acumular el tip
+    tipsNuevosAcumulados.push({ nombre, url });
 
-    // 1. Disparar la descarga (Ventana Guardar como)
-    descargarJSON(nuevoTip);
+    // 2. Preguntar si desea agregar otro (Aceptar = Sí / Cancelar = No)
+    const deseaOtro = confirm("¿Deseas agregar otro tip a la lista?");
 
-    // 2. Limpiar formulario y ocultarlo
-    limpiarFormulario();
-    formContainer.classList.add("hidden");
+    if (deseaOtro) {
+      limpiarFormulario();
+      inputNombre.focus();
+    } else {
+      // 3. Descargar y resetear app sin alertas adicionales
+      descargarJSON(tipsNuevosAcumulados);
 
-    // 3. Resetear buscador y tabla para dejar la app en estado inicial
-    inputBuscador.value = "";
-    renderizarTabla([]);
+      limpiarFormulario();
+      formContainer.classList.add("hidden");
+      tipsNuevosAcumulados = [];
 
-    console.log("App reseteada a estado inicial tras agregar tip.");
+      inputBuscador.value = "";
+      renderizarTabla([]);
+
+      console.log("Proceso finalizado y JSON descargado.");
+    }
   });
 }
 
