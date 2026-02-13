@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang='es'>
+
+<head>
+  <meta charset='UTF-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0,maximum-scale=1.0'>
+  <title>BuscaTips</title>
+  <link rel='stylesheet' href='css/style.css'>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="shortcut icon" href="./images/code.ico" type="image/x-icon">
+</head>
+
+<body>
+
+  <div id="app">
+    <!-- Barra Lateral -->
+    <aside id="sidebar">
+      <h1>BuscaTips</h1>
+
+      <!-- Botón para desplegar formulario de agregar -->
+      <button id="btn-desplegar-agregar" class="btn-primary">+ Agregar Tip</button>
+
+      <!-- Formulario Colapsable (Oculto por defecto) -->
+      <div id="form-agregar-container" class="hidden">
+        <div class="form-group">
+          <label for="nuevo-nombre">Nombre del Tip:</label>
+          <input type="text" id="nuevo-nombre" placeholder="Ej: Cambiar nombre equipo">
+        </div>
+        <div class="form-group">
+          <label for="nueva-url">URL de Dropbox:</label>
+          <input type="text" id="nueva-url" placeholder="https://www.dropbox.com/...">
+        </div>
+        <div class="form-actions">
+          <button id="btn-descargar-json" class="btn-success">Agregar Tip</button>
+          <button id="btn-cancelar-agregar" class="btn-danger">Cancelar</button>
+        </div>
+      </div>
+
+      <hr class="separator">
+
+      <!-- Buscador con ícono -->
+      <div class="search-wrapper">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input type="text" id="buscador" placeholder="Buscar tips...">
+      </div>
+
+      <div id="resultados-container">
+        <table id="resultados">
+          <tbody id="resultados-body">
+            <!-- Filas dinámicas se insertan aquí -->
+          </tbody>
+        </table>
+      </div>
+    </aside>
+
+    <!-- Área de Contenido -->
+    <main id="contenido">
+      <!-- Contenido del .md renderizado aparece aquí -->
+    </main>
+  </div>
+
+  <script src='js/script.js' type="module" defer></script>
+</body>
+
+</html>
