@@ -14,14 +14,14 @@
 <body>
 
   <div id="app">
-    <!-- Barra Lateral -->
     <aside id="sidebar">
       <h1>BuscaTips</h1>
 
-      <!-- Botón para desplegar formulario de agregar -->
-      <button id="btn-desplegar-agregar" class="btn-primary">+ Agregar Tip</button>
+      <div class="sidebar-actions">
+        <button id="btn-desplegar-agregar" class="btn-primary">+ Agregar</button>
+        <button id="btn-crear-tip" class="btn-primary">+ Crear</button>
+      </div>
 
-      <!-- Formulario Colapsable (Oculto por defecto) -->
       <div id="form-agregar-container" class="hidden">
         <div class="form-group">
           <label for="nuevo-nombre">Nombre del Tip:</label>
@@ -39,7 +39,6 @@
 
       <hr class="separator">
 
-      <!-- Buscador con ícono -->
       <div class="search-wrapper">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -51,20 +50,15 @@
 
       <div id="resultados-container">
         <table id="resultados">
-          <tbody id="resultados-body">
-            <!-- Filas dinámicas se insertan aquí -->
-          </tbody>
+          <tbody id="resultados-body"></tbody>
         </table>
       </div>
     </aside>
 
-    <!-- Área de Contenido -->
-    <main id="contenido">
-      <!-- Contenido del .md renderizado aparece aquí -->
-    </main>
+    <main id="contenido"></main>
   </div>
 
-  <!-- Librería para renderizar Markdown -->
+  <!-- Solo Marked.js para renderizar Markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src='js/script.js' type="module" defer></script>
 </body>
