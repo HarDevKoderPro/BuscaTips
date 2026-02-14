@@ -16,59 +16,67 @@ export async function cargarTips() {
   }
 }
 
-// Búsqueda inteligente progresiva
 export function filtrarTips(textoBusqueda) {
   if (!textoBusqueda.trim()) return [];
-
   const texto = textoBusqueda.toLowerCase().trim();
 
-  // Detectar si hay un espacio (búsqueda por palabras completas)
   if (texto.includes(" ")) {
     const palabras = texto.split(/\s+/);
     return tipsData.filter((tip) => {
       const nombreLower = tip.nombre.toLowerCase();
-      // Todas las palabras deben estar presentes como palabras completas
       return palabras.every((palabra) => {
         const regex = new RegExp(`\\b${palabra}`, "i");
         return regex.test(nombreLower);
       });
     });
   } else {
-    // Búsqueda por palabra completa en cualquier parte (mientras escribes)
     return tipsData.filter((tip) => {
       const nombreLower = tip.nombre.toLowerCase();
-      // Buscar como palabra completa o inicio de palabra
       const regex = new RegExp(`\\b${texto}`, "i");
       return regex.test(nombreLower);
     });
   }
 }
 
-// Función para resaltar las coincidencias en el texto
 function resaltarCoincidencias(texto, textoBusqueda) {
   if (!textoBusqueda.trim()) return texto;
-
   const busqueda = textoBusqueda.toLowerCase().trim();
 
-  // Si hay espacios, resaltar cada palabra
   if (busqueda.includes(" ")) {
     const palabras = busqueda.split(/\s+/);
     let resultado = texto;
-
     palabras.forEach((palabra) => {
       const regex = new RegExp(`(\\b${palabra}\\w*)`, "gi");
       resultado = resultado.replace(regex, "<mark>$1</mark>");
     });
-
     return resultado;
   } else {
-    // Resaltar la palabra donde aparezca
     const regex = new RegExp(`(\\b${busqueda}\\w*)`, "gi");
     return texto.replace(regex, "<mark>$1</mark>");
   }
 }
 
-// Renderizar tabla con resaltado
+// Nueva función para obtener y mostrar el Markdown
+async function mostrarContenido(url) {
+  const contenedor = document.getElementById("contenido");
+  contenedor.innerHTML = '<p style="color: #5f7e97;">Cargando contenido...</p>';
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Error al obtener el archivo de Dropbox");
+
+    const markdownText = await response.text();
+
+    // Convertir Markdown a HTML usando la librería marked
+    // marked.parse() es el método de la librería que inyectamos en el HTML
+    contenedor.innerHTML = marked.parse(markdownText);
+  } catch (error) {
+    console.error("Error:", error);
+    contenedor.innerHTML =
+      '<p style="color: #ef5350;">Error al cargar el contenido. Verifica la URL de Dropbox.</p>';
+  }
+}
+
 export function renderizarTabla(tips, textoBusqueda = "") {
   const tbody = document.getElementById("resultados-body");
   tbody.innerHTML = "";
@@ -79,17 +87,14 @@ export function renderizarTabla(tips, textoBusqueda = "") {
     const td = document.createElement("td");
     const a = document.createElement("a");
 
-    // Aplicar resaltado al nombre
     const nombreResaltado = resaltarCoincidencias(tip.nombre, textoBusqueda);
     a.innerHTML = nombreResaltado;
-
     a.href = "#";
-    a.dataset.url = tip.url;
 
     a.addEventListener("click", (e) => {
       e.preventDefault();
-      console.log("Tip seleccionado:", tip.nombre);
-      console.log("URL:", tip.url);
+      // Llamamos a la función de renderizado
+      mostrarContenido(tip.url);
     });
 
     td.appendChild(a);

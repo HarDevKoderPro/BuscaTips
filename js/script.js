@@ -19,10 +19,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 function configurarBuscador() {
   const inputBuscador = document.getElementById("buscador");
+  const panelContenido = document.getElementById("contenido"); // Referencia al panel derecho
+
   inputBuscador.addEventListener("input", (e) => {
     const texto = e.target.value;
+
+    // Si el buscador está vacío, limpiamos también el panel de contenido
+    if (!texto.trim()) {
+      panelContenido.innerHTML = "";
+    }
+
     const resultados = filtrarTips(texto);
-    renderizarTabla(resultados, texto); // Pasamos el texto para el resaltado
+    renderizarTabla(resultados, texto);
   });
 }
 
@@ -34,6 +42,7 @@ function configurarFormularioAgregar() {
   const inputNombre = document.getElementById("nuevo-nombre");
   const inputUrl = document.getElementById("nueva-url");
   const inputBuscador = document.getElementById("buscador");
+  const panelContenido = document.getElementById("contenido");
 
   btnDesplegar.addEventListener("click", () => {
     formContainer.classList.toggle("hidden");
@@ -76,6 +85,7 @@ function configurarFormularioAgregar() {
 
       inputBuscador.value = "";
       renderizarTabla([]);
+      panelContenido.innerHTML = ""; // Limpiar contenido al finalizar carga masiva
     }
   });
 }
