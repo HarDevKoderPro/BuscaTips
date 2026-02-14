@@ -1,35 +1,36 @@
 <!DOCTYPE html>
-<html lang='es'>
+<html lang="es">
 
 <head>
-  <meta charset='UTF-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0,maximum-scale=1.0'>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
   <title>BuscaTips</title>
-  <link rel='stylesheet' href='css/style.css'>
-  <link rel="stylesheet" href="css/fonts.css">
-  <link rel="shortcut icon" href="./images/code.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="shortcut icon" href="./images/code.ico" type="image/x-icon" />
 </head>
 
 <body>
-
   <div id="app">
     <aside id="sidebar">
       <h1>BuscaTips</h1>
 
-      <div class="sidebar-actions">
+      <!-- Acciones sólo visibles en DESKTOP -->
+      <div class="sidebar-actions desktop-only">
         <button id="btn-desplegar-agregar" class="btn-primary">+ Agregar</button>
         <button id="btn-crear-tip" class="btn-primary">+ Crear</button>
       </div>
 
-      <div id="form-agregar-container" class="hidden">
+      <!-- Formulario agregar (sólo desktop) -->
+      <div id="form-agregar-container" class="hidden desktop-only">
         <div class="form-group">
           <label for="nuevo-nombre">Nombre del Tip:</label>
-          <input type="text" id="nuevo-nombre" placeholder="Ej: Cambiar nombre equipo">
+          <input type="text" id="nuevo-nombre" placeholder="Ej: Cambiar nombre equipo" />
         </div>
         <div class="form-group">
           <label for="nueva-url">URL de Dropbox:</label>
-          <input type="text" id="nueva-url" placeholder="https://www.dropbox.com/...">
+          <input type="text" id="nueva-url" placeholder="https://www.dropbox.com/..." />
         </div>
         <div class="form-actions">
           <button id="btn-descargar-json" class="btn-success">Agregar Tip</button>
@@ -37,17 +38,27 @@
         </div>
       </div>
 
-      <hr class="separator">
+      <hr class="separator desktop-only" />
 
-      <div class="search-wrapper">
-        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <path d="m21 21-4.35-4.35"></path>
-        </svg>
-        <input type="text" id="buscador" placeholder="Buscar tips...">
+      <!-- CABECERA BUSCADOR: común, pero con controles mobile -->
+      <div class="search-header">
+        <div class="search-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" id="buscador" placeholder="Buscar tips..." />
+        </div>
+
+        <!-- Botón para mostrar/ocultar resultados en MOBILE -->
+        <button id="btn-toggle-resultados" class="mobile-only toggle-resultados-btn"
+          aria-label="Mostrar/Ocultar resultados">
+          <span class="chevron"></span>
+        </button>
       </div>
 
+      <!-- CONTENEDOR RESULTADOS (columna lateral en desktop, panel deslizante en mobile) -->
       <div id="resultados-container">
         <table id="resultados">
           <tbody id="resultados-body"></tbody>
@@ -55,12 +66,13 @@
       </div>
     </aside>
 
+    <!-- Panel principal de contenido / visor -->
     <main id="contenido"></main>
   </div>
 
-  <!-- Solo Marked.js para renderizar Markdown -->
+  <!-- Sólo Marked.js para renderizar Markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src='js/script.js' type="module" defer></script>
+  <script src="js/script.js" type="module" defer></script>
 </body>
 
 </html>

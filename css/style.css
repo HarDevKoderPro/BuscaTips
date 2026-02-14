@@ -1,18 +1,28 @@
 /* Reset General */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
   background: #011627;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 100%;
   color: #d6deeb;
   overflow: hidden;
 }
 
-#app { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
+#app {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 
+/* SIDEBAR (layout desktop por defecto) */
 #sidebar {
-  width: 350px; 
+  width: 350px;
   background: #01111d;
   border-right: 1px solid #1d3b53;
   display: flex;
@@ -21,80 +31,212 @@ body {
   overflow-y: auto;
 }
 
-#sidebar h1 { font-size: 1.5rem; color: #7fdbca; margin-bottom: 20px; font-weight: 600; }
-
-.sidebar-actions { display: flex; gap: 10px; margin-bottom: 10px; }
-.sidebar-actions button { flex: 1; }
-
-.btn-primary, .btn-success, .btn-danger {
-  width: 100%; padding: 10px; border: none; border-radius: 4px;
-  cursor: pointer; font-weight: 600; font-size: 0.9rem; margin-bottom: 10px;
+#sidebar h1 {
+  font-size: 1.5rem;
+  color: #7fdbca;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
-.btn-primary { background: #1d3b53; color: #7fdbca; border: 1px solid #7fdbca; }
-.btn-success { background: #22a6b3; color: #fff; }
-.btn-danger { background: #ef5350; color: #fff; }
+/* Botones Agregar / Crear (desktop) */
+.sidebar-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.sidebar-actions button {
+  flex: 1;
+}
+
+.btn-primary,
+.btn-success,
+.btn-danger {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.btn-primary {
+  background: #1d3b53;
+  color: #7fdbca;
+  border: 1px solid #7fdbca;
+}
+
+.btn-success {
+  background: #22a6b3;
+  color: #fff;
+}
+
+.btn-danger {
+  background: #ef5350;
+  color: #fff;
+}
 
 #form-agregar-container {
-  background: #011627; padding: 15px; border-radius: 6px;
-  border: 1px solid #1d3b53; margin-bottom: 20px;
+  background: #011627;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #1d3b53;
+  margin-bottom: 20px;
 }
 
-.form-group { margin-bottom: 12px; }
-.form-group label { display: block; font-size: 0.8rem; color: #5f7e97; margin-bottom: 5px; }
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: #5f7e97;
+  margin-bottom: 5px;
+}
+
 .form-group input {
-  width: 100%; padding: 8px; background: #01111d;
-  border: 1px solid #1d3b53; color: #d6deeb; border-radius: 4px; outline: none;
+  width: 100%;
+  padding: 8px;
+  background: #01111d;
+  border: 1px solid #1d3b53;
+  color: #d6deeb;
+  border-radius: 4px;
+  outline: none;
 }
 
-.hidden { display: none; }
-.separator { border: 0; border-top: 1px solid #1d3b53; margin: 10px 0 20px 0; }
+.hidden {
+  display: none !important;
+}
 
-.search-wrapper { position: relative; width: 100%; margin-bottom: 16px; }
-.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: #5f7e97; }
+.separator {
+  border: 0;
+  border-top: 1px solid #1d3b53;
+  margin: 10px 0 20px 0;
+}
+
+/* Header del buscador (común) */
+.search-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.search-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #5f7e97;
+}
 
 #buscador {
-  width: 100%; padding: 12px 16px 12px 40px; background: #011627;
-  border: 1px solid #1d3b53; border-radius: 6px; color: #d6deeb; outline: none;
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  background: #011627;
+  border: 1px solid #1d3b53;
+  border-radius: 6px;
+  color: #d6deeb;
+  outline: none;
 }
 
-#resultados-container { flex: 1; overflow-y: auto; }
-#resultados { width: 100%; border-collapse: collapse; }
-#resultados tbody tr { border-bottom: 1px solid #1d3b53; }
-#resultados tbody td { padding: 12px 4px; }
+/* Resultados (comportamiento desktop por defecto) */
+#resultados-container {
+  flex: 1;
+  overflow-y: auto;
+}
 
-#resultados tbody td a { 
-  color: #d6deeb; 
-  text-decoration: none; 
-  display: block; 
+#resultados {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#resultados tbody tr {
+  border-bottom: 1px solid #1d3b53;
+}
+
+#resultados tbody td {
+  padding: 12px 4px;
+}
+
+#resultados tbody td a {
+  color: #d6deeb;
+  text-decoration: none;
+  display: block;
   line-height: 1.4;
   word-break: normal;
   overflow-wrap: break-word;
 }
 
-#resultados tbody td a mark { 
-  background: #7fdbca; 
-  color: #011627; 
-  padding: 0px 2px; 
-  border-radius: 2px; 
+#resultados tbody td a mark {
+  background: #7fdbca;
+  color: #011627;
+  padding: 0px 2px;
+  border-radius: 2px;
 }
 
-#contenido { flex: 1; background: #011627; padding: 40px; overflow-y: auto; color: #d6deeb; line-height: 1.7; }
+/* Contenido (desktop) */
+#contenido {
+  flex: 1;
+  background: #011627;
+  padding: 40px;
+  overflow-y: auto;
+  color: #d6deeb;
+  line-height: 1.7;
+}
 
 /* MARKDOWN CONTENT */
-#contenido h1 { color: #7fdbca; font-size: 2rem; margin-bottom: 1.5rem; }
-#contenido h2 { color: #82aaff; font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; }
-#contenido h3 { color: #addb67; font-size: 1.2rem; margin-top: 1.5rem; }
-#contenido p { margin-bottom: 1.2rem; }
-#contenido ul, #contenido ol { margin-left: 25px; margin-bottom: 1.5rem; }
-#contenido li { margin-bottom: 0.5rem; }
-#contenido hr { border: 0; border-top: 1px solid #1d3b53; margin: 2rem 0; }
+#contenido h1 {
+  color: #7fdbca;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
 
-/* ========================================
-   BLOQUES DE CÓDIGO - FORZADO TOTAL
-   ======================================== */
+#contenido h2 {
+  color: #82aaff;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
 
-/* Resetear TODOS los estilos heredados */
+#contenido h3 {
+  color: #addb67;
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+#contenido p {
+  margin-bottom: 1.2rem;
+}
+
+#contenido ul,
+#contenido ol {
+  margin-left: 25px;
+  margin-bottom: 1.5rem;
+}
+
+#contenido li {
+  margin-bottom: 0.5rem;
+}
+
+#contenido hr {
+  border: 0;
+  border-top: 1px solid #1d3b53;
+  margin: 2rem 0;
+}
+
+/* BLOQUES DE CÓDIGO */
+
 #contenido pre,
 #contenido pre *,
 main#contenido pre,
@@ -102,7 +244,6 @@ main#contenido pre * {
   all: unset;
 }
 
-/* Aplicar estilos fijos al contenedor <pre> */
 #contenido pre,
 main#contenido pre {
   display: block !important;
@@ -115,13 +256,12 @@ main#contenido pre {
   white-space: pre !important;
 }
 
-/* Aplicar estilos fijos al <code> dentro de <pre> */
 #contenido pre code,
 #contenido pre code[class*="language-"],
 main#contenido pre code,
 main#contenido pre code[class*="language-"] {
   display: block !important;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+  font-family: "Consolas", "Monaco", "Courier New", monospace !important;
   font-size: 0.95rem !important;
   color: #d6deeb !important;
   background: transparent !important;
@@ -139,7 +279,7 @@ main#contenido pre code[class*="language-"] {
   color: #ecc48d !important;
   padding: 2px 6px !important;
   border-radius: 4px !important;
-  font-family: 'Consolas', monospace !important;
+  font-family: "Consolas", monospace !important;
   font-size: 0.9rem !important;
 }
 
@@ -158,37 +298,193 @@ main#contenido pre code[class*="language-"] {
   margin: 1rem 0;
 }
 
-/* EDITOR STYLES */
-.editor-container { display: flex; flex-direction: column; height: 100%; gap: 20px; }
-.editor-header { display: flex; flex-direction: column; gap: 10px; }
+/* EDITOR (sólo desktop visualmente, en mobile no se usa) */
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 20px;
+}
+
+.editor-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .editor-title-input {
-  background: #01111d; border: 1px solid #1d3b53; color: #7fdbca;
-  font-size: 1.5rem; padding: 10px; border-radius: 4px; outline: none;
+  background: #01111d;
+  border: 1px solid #1d3b53;
+  color: #7fdbca;
+  font-size: 1.5rem;
+  padding: 10px;
+  border-radius: 4px;
+  outline: none;
 }
+
 .editor-textarea {
-  flex: 1; background: #01111d; border: 1px solid #1d3b53; color: #d6deeb;
-  font-family: 'Consolas', monospace; padding: 20px; border-radius: 8px;
-  resize: none; outline: none; font-size: 1rem; line-height: 1.6;
+  flex: 1;
+  background: #01111d;
+  border: 1px solid #1d3b53;
+  color: #d6deeb;
+  font-family: "Consolas", monospace;
+  padding: 20px;
+  border-radius: 8px;
+  resize: none;
+  outline: none;
+  font-size: 1rem;
+  line-height: 1.6;
 }
+
 .editor-preview-area {
-  flex: 1; background: #01111d; border: 1px solid #1d3b53;
-  padding: 20px; border-radius: 8px; overflow-y: auto;
+  flex: 1;
+  background: #01111d;
+  border: 1px solid #1d3b53;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-y: auto;
 }
-.editor-actions { display: flex; gap: 15px; justify-content: flex-end; }
+
+.editor-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+}
+
 .btn-save {
-  background: #addb67; color: #011627; padding: 10px 25px;
-  border: none; border-radius: 4px; font-weight: 700; cursor: pointer;
+  background: #addb67;
+  color: #011627;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
 }
+
 .btn-preview {
-  background: #1d3b53; color: #7fdbca; padding: 10px 25px;
-  border: 1px solid #7fdbca; border-radius: 4px; font-weight: 600; cursor: pointer;
+  background: #1d3b53;
+  color: #7fdbca;
+  padding: 10px 25px;
+  border: 1px solid #7fdbca;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
 }
+
 .btn-cancel-edit {
-  background: transparent; color: #ef5350; padding: 10px 25px;
-  border: 1px solid #ef5350; border-radius: 4px; font-weight: 600; cursor: pointer;
+  background: transparent;
+  color: #ef5350;
+  padding: 10px 25px;
+  border: 1px solid #ef5350;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 12px; }
-::-webkit-scrollbar-track { background: #01111d; }
-::-webkit-scrollbar-thumb { background: #1d3b53; border-radius: 6px; }
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #01111d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1d3b53;
+  border-radius: 6px;
+}
+
+/* Utilidades visibilidad */
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* ===========================
+   LAYOUT MOBILE
+   =========================== */
+@media (max-width: 768px) {
+  body {
+    overflow: hidden;
+  }
+
+  #app {
+    flex-direction: column;
+  }
+
+  #sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #1d3b53;
+    padding: 12px 12px 8px;
+    overflow: visible;
+  }
+
+  #sidebar h1 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  /* Ocultamos por completo las acciones de edición en mobile */
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: inline-flex;
+  }
+
+  /* Botón toggle resultados */
+  .toggle-resultados-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid #7fdbca;
+    background: #011627;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .toggle-resultados-btn .chevron {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-right: 3px solid #7fdbca;
+    border-bottom: 3px solid #7fdbca;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+
+  /* Estado cerrado (flecha hacia abajo) */
+  .toggle-resultados-btn.collapsed .chevron {
+    transform: rotate(135deg);
+  }
+
+  /* En mobile, el contenedor de resultados es un panel que se muestra/oculta */
+  #resultados-container {
+    max-height: 45vh; /* altura inicial aproximada para emular tu captura */
+    overflow-y: auto;
+    transition: max-height 0.25s ease;
+  }
+
+  #resultados-container.collapsed {
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  /* El contenido ocupa el resto de la pantalla y hace scroll */
+  #contenido {
+    flex: none;
+    height: calc(100vh - 120px); /* se ajusta a la barra superior */
+    padding: 16px;
+    overflow-y: auto;
+  }
+}

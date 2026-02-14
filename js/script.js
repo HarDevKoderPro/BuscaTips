@@ -7,29 +7,67 @@ import {
 
 let tipsNuevosAcumulados = [];
 
+// Detección simple de modo mobile
+const esMobile = () => window.matchMedia("(max-width: 768px)").matches;
+
 document.addEventListener("DOMContentLoaded", async () => {
   await cargarTips();
   configurarBuscador();
-  configurarFormularioAgregar();
-  configurarModoEditor();
+
+  // El formulario de agregar y el editor sólo se configuran en desktop
+  if (!esMobile()) {
+    configurarFormularioAgregar();
+    configurarModoEditor();
+  }
+
+  configurarToggleResultadosMobile();
 });
 
+/* ===========================
+   BUSCADOR
+   =========================== */
 function configurarBuscador() {
   const inputBuscador = document.getElementById("buscador");
   const panelContenido = document.getElementById("contenido");
 
   inputBuscador.addEventListener("input", (e) => {
     const texto = e.target.value;
-    if (!texto.trim()) panelContenido.innerHTML = "";
+    if (!texto.trim()) {
+      panelContenido.innerHTML = "";
+    }
     const resultados = filtrarTips(texto);
     renderizarTabla(resultados, texto);
   });
 }
 
+/* ===========================
+   TOGGLE RESULTADOS (MOBILE)
+   =========================== */
+function configurarToggleResultadosMobile() {
+  const btnToggle = document.getElementById("btn-toggle-resultados");
+  const contResultados = document.getElementById("resultados-container");
+
+  if (!btnToggle || !contResultados) return;
+
+  // Estado inicial: resultados visibles (coincide con captura)
+  btnToggle.classList.remove("collapsed");
+  contResultados.classList.remove("collapsed");
+
+  btnToggle.addEventListener("click", () => {
+    const colapsado = contResultados.classList.toggle("collapsed");
+    btnToggle.classList.toggle("collapsed", colapsado);
+  });
+}
+
+/* ===========================
+   MODO EDITOR (DESKTOP)
+   =========================== */
 function configurarModoEditor() {
   const btnCrear = document.getElementById("btn-crear-tip");
   const panelContenido = document.getElementById("contenido");
   const inputBuscador = document.getElementById("buscador");
+
+  if (!btnCrear) return; // en mobile no existe
 
   btnCrear.addEventListener("click", () => {
     inputBuscador.value = "";
@@ -74,6 +112,7 @@ function configurarModoEditor() {
     document
       .getElementById("btn-cancelar-edicion")
       .addEventListener("click", () => (panelContenido.innerHTML = ""));
+
     document.getElementById("btn-guardar-md").addEventListener("click", () => {
       const titulo = document.getElementById("editor-title").value.trim();
       if (!titulo || !textarea.value) {
@@ -100,17 +139,20 @@ function descargarArchivoMD(nombre, contenido) {
   URL.revokeObjectURL(url);
 }
 
+/* ===========================
+   FORMULARIO AGREGAR (DESKTOP)
+   =========================== */
 function configurarFormularioAgregar() {
   const btnDesplegar = document.getElementById("btn-desplegar-agregar");
   const formContainer = document.getElementById("form-agregar-container");
   const btnAgregar = document.getElementById("btn-descargar-json");
   const btnCancelar = document.getElementById("btn-cancelar-agregar");
 
-  // Inputs
+  if (!btnDesplegar || !formContainer) return; // en mobile no existen
+
   const inputNombre = document.getElementById("nuevo-nombre");
   const inputUrl = document.getElementById("nueva-url");
 
-  // Función auxiliar para limpiar y cerrar
   const limpiarYCerrar = () => {
     inputNombre.value = "";
     inputUrl.value = "";
@@ -120,7 +162,6 @@ function configurarFormularioAgregar() {
 
   btnDesplegar.addEventListener("click", () => {
     formContainer.classList.toggle("hidden");
-    // Si se abre, nos aseguramos de que empiece limpio
     if (!formContainer.classList.contains("hidden")) {
       inputNombre.value = "";
       inputUrl.value = "";
@@ -144,12 +185,10 @@ function configurarFormularioAgregar() {
     });
 
     if (confirm("¿Deseas agregar otro tip?")) {
-      // Si quiere agregar otro, solo limpiamos los inputs para el siguiente
       inputNombre.value = "";
       inputUrl.value = "";
       inputNombre.focus();
     } else {
-      // Si no quiere más, descargamos y LIMPIAMOS TODO
       descargarJSON(tipsNuevosAcumulados);
       limpiarYCerrar();
     }
@@ -159,8 +198,12 @@ function configurarFormularioAgregar() {
 }
 
 function convertirURLDropbox(url) {
-  if (!url.includes("dropbox.com") || url.includes("dl.dropboxusercontent.com"))
+  if (
+    !url.includes("dropbox.com") ||
+    url.includes("dl.dropboxusercontent.com")
+  ) {
     return url;
+  }
   return url
     .replace("www.dropbox.com", "dl.dropboxusercontent.com")
     .replace(/&st=[^&]*/, "")
