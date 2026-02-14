@@ -404,9 +404,9 @@ main#contenido pre code[class*="language-"] {
   display: none;
 }
 
-/* ===========================
+/* ====
    LAYOUT MOBILE
-   =========================== */
+   ==== */
 @media (max-width: 768px) {
   body {
     overflow: hidden;
@@ -484,7 +484,28 @@ main#contenido pre code[class*="language-"] {
   #contenido {
     flex: none;
     height: calc(100vh - 120px); /* se ajusta a la barra superior */
-    padding: 16px;
+    padding: 16px 16px 100px; /* +padding inferior para ver el final del contenido */
     overflow-y: auto;
+  }
+
+  /* Reducir tamaño de títulos SOLO en mobile */
+  #contenido h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  #contenido h2 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  #contenido h3 {
+    font-size: 1.1rem;
+    margin-top: 1.25rem;
+  }
+
+  #buscador{
+    font-size: 1.2em;
   }
 }
