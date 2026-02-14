@@ -1,34 +1,38 @@
 [
   {
     "nombre": "Cambiar nombre del equipo",
-    "url": "https://www.dropbox.com/scl/fi/g1dav2jvwbibiwcc6rxkw/Cambiar-nombre-del-equipo.md?rlkey=3n3w57abhiol618yedn349clx&st=vlmx1rp6&dl=0"
+    "url": "https://dl.dropboxusercontent.com/scl/fi/g1dav2jvwbibiwcc6rxkw/Cambiar-nombre-del-equipo.md?rlkey=3n3w57abhiol618yedn349clx"
   },
   {
-    "nombre": "Cambiar usuario logueado",
-    "url": "https://www.dropbox.com/scl/fi/g1dav2jvwbibiwcc6rxkw/Cambiar-nombre-del-equipo.md?rlkey=3n3w57abhiol618yedn349clx&st=vlmx1rp6&dl=0"
+    "nombre": "Configurar localhost mobile",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/2i474u4z2y8cuuqz7ywpq/Configurar-localHost-mobile.md?rlkey=zpk5j9vlilda6z9zq5vomri6g"
   },
   {
-    "nombre": "Instalar Docker en Ubuntu",
-    "url": "https://www.dropbox.com/scl/fi/ejemplo1/Instalar-Docker.md?rlkey=ejemplo1&dl=0"
+    "nombre": "Flujo de trabajo con ramas en Git",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/m9e3tau58nphzdrr71kvf/Flujo-de-trabajo-con-ramas-en-git.md?rlkey=zq931ehm5tar5h05ubaywow4g"
   },
   {
-    "nombre": "Configurar SSH en Linux",
-    "url": "https://www.dropbox.com/scl/fi/ejemplo2/Configurar-SSH.md?rlkey=ejemplo2&dl=0"
+    "nombre": "Flujo de trabajo con algoritmos",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/vpirrs6zj9vkleha23867/Flujo-de-trabajo-con-algoritmos.md?rlkey=7o9ss3f5duigyisza73qf1d3q"
   },
   {
-    "nombre": "Crear usuario en MySQL",
-    "url": "https://www.dropbox.com/scl/fi/ejemplo3/Crear-usuario-MySQL.md?rlkey=ejemplo3&dl=0"
+    "nombre": "Liberar espacio correo Gmail",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/xhyi961y87d9cvpk1834r/Liberar-espacio-correo-gmail.md?rlkey=zaduvtykcwx8moj3bd7w15xao"
   },
   {
-    "nombre": "Comandos básicos de Git",
-    "url": "https://www.dropbox.com/scl/fi/ejemplo4/Comandos-Git.md?rlkey=ejemplo4&dl=0"
+    "nombre": "Mantenimiento general de iphone",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/6rptxn99w0rddnfzb30r6/Mantenimiento-general-de-iphone.md?rlkey=nbf9uek2y1cavn6r4xj5g4498"
   },
   {
-    "nombre": "Comentar lineas en vscode",
-    "url": "https://www.dropbox.com/scl/fi/g1dav2jvwbibiwcc6rxkw/Cambiar-nombre-del-equipo.md?rlkey=3n3w57abhiol618yedn349clx&st=vlmx1rp6&dl=0"
+    "nombre": "Renombrar rama master a main con Git",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/87zs1r2jkgkcd7ryygu6g/Renombrar-rama-master-a-main-con-git.md?rlkey=2y3kdmptmprq3fv65q3puyulh"
   },
   {
-    "nombre": "llenar base de datos",
-    "url": "www.google.com"
+    "nombre": "Subir archivos a server por FTP",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/2h3zy8a6p9htcv9yibdeq/Subir-archivos-a-server-por-FTP.md?rlkey=gc70g92vi4il9tdlzenpgp9pf"
+  },
+  {
+    "nombre": "tip prueba",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/7sbsw00nq0co13smj6bzy/tip-prueba.md?rlkey=k3j0bi1474uk8380sb12cmoxo"
   }
 ]

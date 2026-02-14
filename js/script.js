@@ -22,7 +22,7 @@ function configurarBuscador() {
   inputBuscador.addEventListener("input", (e) => {
     const texto = e.target.value;
     const resultados = filtrarTips(texto);
-    renderizarTabla(resultados);
+    renderizarTabla(resultados, texto); // Pasamos el texto para el resaltado
   });
 }
 
@@ -48,24 +48,26 @@ function configurarFormularioAgregar() {
 
   btnAgregar.addEventListener("click", () => {
     const nombre = inputNombre.value.trim();
-    const url = inputUrl.value.trim();
+    const urlOriginal = inputUrl.value.trim();
 
-    if (!nombre || !url) {
+    if (!nombre || !urlOriginal) {
       alert("Por favor completa ambos campos");
       return;
     }
 
-    // 1. Acumular el tip
-    tipsNuevosAcumulados.push({ nombre, url });
+    const urlConvertida = convertirURLDropbox(urlOriginal);
 
-    // 2. Preguntar si desea agregar otro (Aceptar = Sí / Cancelar = No)
+    tipsNuevosAcumulados.push({
+      nombre,
+      url: urlConvertida,
+    });
+
     const deseaOtro = confirm("¿Deseas agregar otro tip a la lista?");
 
     if (deseaOtro) {
       limpiarFormulario();
       inputNombre.focus();
     } else {
-      // 3. Descargar y resetear app sin alertas adicionales
       descargarJSON(tipsNuevosAcumulados);
 
       limpiarFormulario();
@@ -74,8 +76,6 @@ function configurarFormularioAgregar() {
 
       inputBuscador.value = "";
       renderizarTabla([]);
-
-      console.log("Proceso finalizado y JSON descargado.");
     }
   });
 }
@@ -83,4 +83,23 @@ function configurarFormularioAgregar() {
 function limpiarFormulario() {
   document.getElementById("nuevo-nombre").value = "";
   document.getElementById("nueva-url").value = "";
+}
+
+function convertirURLDropbox(url) {
+  if (!url.includes("dropbox.com")) {
+    return url;
+  }
+
+  if (url.includes("dl.dropboxusercontent.com")) {
+    return url;
+  }
+
+  let urlConvertida = url.replace(
+    "www.dropbox.com",
+    "dl.dropboxusercontent.com",
+  );
+  urlConvertida = urlConvertida.replace(/&st=[^&]*/, "");
+  urlConvertida = urlConvertida.replace(/&dl=\d/, "");
+
+  return urlConvertida;
 }

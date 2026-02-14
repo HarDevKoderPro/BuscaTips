@@ -212,3 +212,12 @@ button:hover { opacity: 0.8; }
 ::-webkit-scrollbar-track { background: #01111d; }
 ::-webkit-scrollbar-thumb { background: #1d3b53; border-radius: 6px; }
 ::-webkit-scrollbar-thumb:hover { background: #2e5266; }
+
+/* Resaltado de búsqueda */
+#resultados tbody td a mark {
+  background: #7fdbca;
+  color: #011627;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
