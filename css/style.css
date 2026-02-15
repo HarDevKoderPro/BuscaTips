@@ -195,6 +195,37 @@ body {
   line-height: 1.7;
 }
 
+/* ESTILOS PARA EL BOTÓN DE EDITAR EN LA VISTA */
+.view-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  border-bottom: 1px solid #2d3e4f;
+  margin-bottom: 15px;
+}
+
+.btn-edit-toggle {
+  background-color: #2d3e4f;
+  color: #addb67;
+  border: 1px solid #addb67;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-edit-toggle:hover {
+  background-color: #addb67;
+  color: #1a2634;
+}
+
+.markdown-body {
+  padding: 0 20px;
+  line-height: 1.6;
+}
+
 /* MARKDOWN CONTENT */
 #contenido h1 {
   color: #7fdbca;
@@ -507,5 +538,16 @@ main#contenido pre code[class*="language-"] {
 
   #buscador{
     font-size: 1.2em;
+  }
+
+  /* Ajustes para el botón de editar en mobile (aunque no se mostrará por desktop-only) */
+  .view-header {
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+
+  .btn-edit-toggle {
+    padding: 6px 12px;
+    font-size: 0.85rem;
   }
 }
