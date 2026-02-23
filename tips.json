@@ -56,7 +56,15 @@
     "url": "https://dl.dropboxusercontent.com/scl/fi/capw6vqvo4nuqtzea9o1p/Crear-proyecto-React-con-Vite.md?rlkey=gtdo0uraz3i3jc7yov9n5hil0"
   },
   {
-    "nombre": "Configurar GIT",
-    "url": "https://dl.dropboxusercontent.com/scl/fi/jgoqywwxhg2kz016vjix0/Configurar-Git.md?rlkey=fngrkbcwal6kg9d1qho44oshi"
+    "nombre": "Configurar Usuario y Correo Git",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/p279qc9z5qrfevy4n2yhe/Configurar-Usuario-y-Correo-Git.md?rlkey=vs42dfu2l1mshqlz9572sbesr"
+  },
+  {
+    "nombre": "Eliminar Editores de Texto Git",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/6vscut8h8bwepthpcoes6/Eliminar-Editores-de-Texto-Git.md?rlkey=s8sq9qa07ahqdkepsmc5bc3hy"
+  },
+  {
+    "nombre": "Asignar Editor de Texto Nano a Git",
+    "url": "https://dl.dropboxusercontent.com/scl/fi/0tt0ivsj8syzsf1p5xopd/Asignar-Editor-de-Texto-Nano-a-Git.md?rlkey=39en857snmknvlv4t42ky0of0"
   }
 ]
