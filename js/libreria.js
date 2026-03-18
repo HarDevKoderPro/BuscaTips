@@ -22,6 +22,16 @@ const esMobile = () => window.matchMedia("(max-width: 768px)").matches;
 // ─── FUNCIONES AUXILIARES ───────────────────────────────────────
 
 /**
+ * Normalizar texto: eliminar tildes/acentos y convertir a minúsculas
+ * Permite que "Línea" y "linea" produzcan las mismas coincidencias
+ * @param {string} texto
+ * @returns {string} Texto normalizado sin acentos y en minúsculas
+ */
+function normalizarTexto(texto) {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+/**
  * Ordenar tips alfabéticamente por nombre (case-insensitive)
  * @param {Array} tips - Lista de tips a ordenar
  * @returns {Array} Tips ordenados
@@ -188,14 +198,14 @@ export async function eliminarTip(id) {
  */
 export function filtrarTips(textoBusqueda) {
   if (!textoBusqueda.trim()) return [];
-  const texto = textoBusqueda.toLowerCase().trim();
-  const palabras = texto.split(/\s+/);
+  const textoNorm = normalizarTexto(textoBusqueda.trim());
+  const palabras = textoNorm.split(/\s+/);
   const filtrados = tipsData.filter((tip) => {
-    const nombreLower = tip.nombre.toLowerCase();
-    const contenidoLower = (tip.contenido || "").toLowerCase();
-    // Búsqueda por subcadena: cada palabra debe aparecer en nombre O contenido
+    const nombreNorm = normalizarTexto(tip.nombre);
+    const contenidoNorm = normalizarTexto(tip.contenido || "");
+    // Búsqueda por subcadena normalizada: cada palabra debe aparecer en nombre O contenido
     return palabras.every(
-      (p) => nombreLower.includes(p) || contenidoLower.includes(p)
+      (p) => nombreNorm.includes(p) || contenidoNorm.includes(p)
     );
   });
   return ordenarAlfabeticamente(filtrados);
@@ -208,17 +218,41 @@ export function filtrarTips(textoBusqueda) {
  */
 function resaltarCoincidencias(texto, textoBusqueda) {
   if (!textoBusqueda || !textoBusqueda.trim()) return texto;
-  const palabras = textoBusqueda.toLowerCase().trim().split(/\s+/);
-  let resultado = texto;
+  const palabras = normalizarTexto(textoBusqueda.trim()).split(/\s+/);
+  const textoNorm = normalizarTexto(texto);
+
+  // Construir resultado carácter por carácter, marcando las coincidencias
+  // Esto permite resaltar correctamente aunque el texto original tenga tildes
+  let resultado = "";
+  let i = 0;
+  const marcas = new Array(texto.length).fill(false);
+
+  // Marcar las posiciones que coinciden con alguna palabra de búsqueda
   palabras.forEach((p) => {
-    // Escapar caracteres especiales de regex
-    const escaped = p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    // Resaltar coincidencias parciales (subcadena, sin \b)
-    resultado = resultado.replace(
-      new RegExp(`(${escaped})`, "gi"),
-      "<mark>$1</mark>"
-    );
+    if (!p) return;
+    let pos = 0;
+    while ((pos = textoNorm.indexOf(p, pos)) !== -1) {
+      for (let j = pos; j < pos + p.length; j++) {
+        marcas[j] = true;
+      }
+      pos++;
+    }
   });
+
+  // Reconstruir el HTML con <mark> en las posiciones marcadas
+  let enMark = false;
+  for (i = 0; i < texto.length; i++) {
+    if (marcas[i] && !enMark) {
+      resultado += "<mark>";
+      enMark = true;
+    } else if (!marcas[i] && enMark) {
+      resultado += "</mark>";
+      enMark = false;
+    }
+    resultado += texto[i];
+  }
+  if (enMark) resultado += "</mark>";
+
   return resultado;
 }
 

@@ -83,12 +83,14 @@ function configurarBuscador() {
 
     // Debounce para búsqueda en API (más completa, incluye contenido)
     debounceTimer = setTimeout(async () => {
-      // Verificar que el campo no fue vaciado mientras esperábamos
+      // Verificar que el texto no cambió mientras esperábamos
       const textoActual = inputBuscador.value.trim();
-      if (!textoActual) return;
+      if (!textoActual || textoActual !== texto.trim()) return;
 
       const resultadosAPI = await buscarTipsAPI(textoActual);
-      if (resultadosAPI.length > 0) {
+      // Verificar de nuevo que el input no cambió durante la petición async
+      const textoPostAPI = inputBuscador.value.trim();
+      if (textoPostAPI === textoActual && resultadosAPI.length > 0) {
         renderizarTabla(resultadosAPI, textoActual);
       }
     }, 400);
