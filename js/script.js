@@ -20,6 +20,10 @@ const esMobile = () => window.matchMedia("(max-width: 768px)").matches;
 
 // Timer para debounce en búsqueda
 let debounceTimer = null;
+// Versión de búsqueda: se incrementa en cada keystroke para invalidar respuestas obsoletas
+let searchVersion = 0;
+// AbortController para cancelar peticiones API en vuelo
+let abortController = null;
 
 // ─── INICIALIZACIÓN ────────────────────────────────────────────
 
@@ -67,8 +71,18 @@ function configurarBuscador() {
   inputBuscador.addEventListener("input", (e) => {
     const texto = e.target.value;
 
-    // Siempre cancelar cualquier búsqueda API pendiente al cambiar el input
+    // Incrementar versión de búsqueda para invalidar cualquier respuesta en vuelo
+    searchVersion++;
+    const miVersion = searchVersion;
+
+    // Cancelar timeout de debounce pendiente
     clearTimeout(debounceTimer);
+
+    // Abortar cualquier petición API en vuelo
+    if (abortController) {
+      abortController.abort();
+      abortController = null;
+    }
 
     // Si el campo está vacío, limpiar sidebar y área principal
     if (!texto.trim()) {
@@ -79,19 +93,36 @@ function configurarBuscador() {
 
     // Filtrado local inmediato (rápido, sin esperar API)
     const resultadosLocales = filtrarTips(texto);
-    renderizarTabla(resultadosLocales, texto);
+    // Solo renderizar si esta sigue siendo la búsqueda vigente
+    if (searchVersion === miVersion) {
+      renderizarTabla(resultadosLocales, texto);
+    }
 
     // Debounce para búsqueda en API (más completa, incluye contenido)
     debounceTimer = setTimeout(async () => {
-      // Verificar que el texto no cambió mientras esperábamos
-      const textoActual = inputBuscador.value.trim();
-      if (!textoActual || textoActual !== texto.trim()) return;
+      // Verificar que seguimos en la misma versión de búsqueda
+      if (searchVersion !== miVersion) return;
 
-      const resultadosAPI = await buscarTipsAPI(textoActual);
-      // Verificar de nuevo que el input no cambió durante la petición async
-      const textoPostAPI = inputBuscador.value.trim();
-      if (textoPostAPI === textoActual && resultadosAPI.length > 0) {
-        renderizarTabla(resultadosAPI, textoActual);
+      const textoActual = inputBuscador.value.trim();
+      if (!textoActual) return;
+
+      // Crear nuevo AbortController para esta petición
+      abortController = new AbortController();
+
+      try {
+        const resultadosAPI = await buscarTipsAPI(textoActual, abortController.signal);
+
+        // Triple verificación: versión + texto actual coinciden
+        if (searchVersion === miVersion && inputBuscador.value.trim() === textoActual) {
+          if (resultadosAPI.length > 0) {
+            renderizarTabla(resultadosAPI, textoActual);
+          }
+        }
+      } catch (err) {
+        // Ignorar errores de abort (son esperados)
+        if (err.name !== "AbortError") {
+          console.error("Error en búsqueda API:", err);
+        }
       }
     }, 400);
   });

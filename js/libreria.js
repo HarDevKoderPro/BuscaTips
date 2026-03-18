@@ -80,11 +80,13 @@ export function obtenerTodosLosTips() {
  * @param {string} texto - Término de búsqueda
  * @returns {Array} Tips encontrados (ordenados alfabéticamente)
  */
-export async function buscarTipsAPI(texto) {
+export async function buscarTipsAPI(texto, signal = null) {
   if (!texto.trim()) return [];
   try {
+    const fetchOptions = signal ? { signal } : {};
     const response = await fetch(
-      `${API_URL}?buscar=${encodeURIComponent(texto.trim())}`
+      `${API_URL}?buscar=${encodeURIComponent(texto.trim())}`,
+      fetchOptions
     );
     const json = await response.json();
 
@@ -93,6 +95,8 @@ export async function buscarTipsAPI(texto) {
     }
     return [];
   } catch (error) {
+    // Re-throw AbortError so caller can handle it
+    if (error.name === "AbortError") throw error;
     console.error("Error al buscar tips:", error);
     return [];
   }
