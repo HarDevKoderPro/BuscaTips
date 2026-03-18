@@ -19,6 +19,19 @@ let nombreTipActual = "";
 // Detección de mobile
 const esMobile = () => window.matchMedia("(max-width: 768px)").matches;
 
+// ─── FUNCIONES AUXILIARES ───────────────────────────────────────
+
+/**
+ * Ordenar tips alfabéticamente por nombre (case-insensitive)
+ * @param {Array} tips - Lista de tips a ordenar
+ * @returns {Array} Tips ordenados
+ */
+function ordenarAlfabeticamente(tips) {
+  return [...tips].sort((a, b) =>
+    a.nombre.toLowerCase().localeCompare(b.nombre.toLowerCase())
+  );
+}
+
 // ─── FUNCIONES DE API (CRUD) ───────────────────────────────────
 
 /**
@@ -44,10 +57,18 @@ export async function cargarTips() {
 }
 
 /**
+ * Obtener todos los tips cargados, ordenados alfabéticamente
+ * @returns {Array} Tips ordenados alfabéticamente por nombre
+ */
+export function obtenerTodosLosTips() {
+  return ordenarAlfabeticamente(tipsData);
+}
+
+/**
  * Buscar tips en la API por texto
  * GET /api/tips.php?buscar=texto
  * @param {string} texto - Término de búsqueda
- * @returns {Array} Tips encontrados
+ * @returns {Array} Tips encontrados (ordenados alfabéticamente)
  */
 export async function buscarTipsAPI(texto) {
   if (!texto.trim()) return [];
@@ -58,7 +79,7 @@ export async function buscarTipsAPI(texto) {
     const json = await response.json();
 
     if (json.success && json.data) {
-      return json.data;
+      return ordenarAlfabeticamente(json.data);
     }
     return [];
   } catch (error) {
@@ -161,17 +182,19 @@ export async function eliminarTip(id) {
 /**
  * Filtrar tips cargados localmente (búsqueda rápida sin API)
  * Se usa para filtrado instantáneo mientras el usuario escribe
+ * Resultados ordenados alfabéticamente
  * @param {string} textoBusqueda
- * @returns {Array} Tips filtrados
+ * @returns {Array} Tips filtrados y ordenados
  */
 export function filtrarTips(textoBusqueda) {
   if (!textoBusqueda.trim()) return [];
   const texto = textoBusqueda.toLowerCase().trim();
   const palabras = texto.split(/\s+/);
-  return tipsData.filter((tip) => {
+  const filtrados = tipsData.filter((tip) => {
     const nombreLower = tip.nombre.toLowerCase();
     return palabras.every((p) => new RegExp(`\\b${p}`, "i").test(nombreLower));
   });
+  return ordenarAlfabeticamente(filtrados);
 }
 
 // ─── FUNCIONES DE RENDERIZADO ──────────────────────────────────
@@ -180,7 +203,7 @@ export function filtrarTips(textoBusqueda) {
  * Resaltar coincidencias de búsqueda en el texto
  */
 function resaltarCoincidencias(texto, textoBusqueda) {
-  if (!textoBusqueda.trim()) return texto;
+  if (!textoBusqueda || !textoBusqueda.trim()) return texto;
   const palabras = textoBusqueda.toLowerCase().trim().split(/\s+/);
   let resultado = texto;
   palabras.forEach((p) => {
@@ -208,49 +231,12 @@ function mostrarContenido(tip) {
   // Renderizamos el Markdown a HTML
   const htmlContenido = marked.parse(tip.contenido || "");
 
-  // Solo en desktop mostramos botones de editar y eliminar
-  if (!esMobile()) {
-    contenedor.innerHTML = `
-      <div class="view-header desktop-only">
-        <button id="btn-eliminar-actual" class="btn-delete-toggle">🗑️ Eliminar</button>
-        <button id="btn-editar-actual" class="btn-edit-toggle">✏️ Editar este Tip</button>
-      </div>
-      <div id="visor-markdown" class="markdown-body">
-        ${htmlContenido}
-      </div>
-    `;
-
-    // Evento para el botón editar
-    document
-      .getElementById("btn-editar-actual")
-      .addEventListener("click", () => {
-        const evento = new CustomEvent("activarEdicion", {
-          detail: {
-            id: tipActualId,
-            titulo: nombreTipActual,
-            contenido: contenidoOriginalMD,
-          },
-        });
-        document.dispatchEvent(evento);
-      });
-
-    // Evento para el botón eliminar
-    document
-      .getElementById("btn-eliminar-actual")
-      .addEventListener("click", () => {
-        const evento = new CustomEvent("activarEliminacion", {
-          detail: { id: tipActualId, nombre: nombreTipActual },
-        });
-        document.dispatchEvent(evento);
-      });
-  } else {
-    // En mobile solo mostramos el contenido sin botones de acción
-    contenedor.innerHTML = `
-      <div id="visor-markdown" class="markdown-body">
-        ${htmlContenido}
-      </div>
-    `;
-  }
+  // Área principal solo muestra el contenido renderizado (sin botones de acción)
+  contenedor.innerHTML = `
+    <div id="visor-markdown" class="markdown-body">
+      ${htmlContenido}
+    </div>
+  `;
 }
 
 /**

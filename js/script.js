@@ -7,6 +7,7 @@
 
 import {
   cargarTips,
+  obtenerTodosLosTips,
   filtrarTips,
   buscarTipsAPI,
   crearTip,
@@ -26,6 +27,9 @@ let debounceTimer = null;
 document.addEventListener("DOMContentLoaded", async () => {
   // Cargar todos los tips al iniciar
   await cargarTips();
+
+  // Mostrar todos los tips ordenados alfabéticamente al cargar la página
+  mostrarTodosLosTips();
 
   // Configurar buscador (disponible en todas las plataformas)
   configurarBuscador();
@@ -49,6 +53,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
+// ─── FUNCIÓN AUXILIAR: MOSTRAR TODOS LOS TIPS ──────────────────
+
+/**
+ * Muestra todos los tips ordenados alfabéticamente en la tabla de resultados
+ */
+function mostrarTodosLosTips() {
+  const todosLosTips = obtenerTodosLosTips();
+  renderizarTabla(todosLosTips);
+}
+
+/**
+ * Limpia el campo de búsqueda y recarga la lista completa de tips
+ */
+async function limpiarYRecargar() {
+  document.getElementById("buscador").value = "";
+  await cargarTips();
+  mostrarTodosLosTips();
+}
+
 // ─── BUSCADOR ──────────────────────────────────────────────────
 
 function configurarBuscador() {
@@ -58,10 +81,10 @@ function configurarBuscador() {
   inputBuscador.addEventListener("input", (e) => {
     const texto = e.target.value;
 
-    // Si el campo está vacío, limpiar todo
+    // Si el campo está vacío, mostrar todos los tips
     if (!texto.trim()) {
       panelContenido.innerHTML = "";
-      renderizarTabla([]);
+      mostrarTodosLosTips();
       return;
     }
 
@@ -103,9 +126,6 @@ function configurarBotonCrear() {
   if (!btnCrear) return;
 
   btnCrear.addEventListener("click", () => {
-    // Limpiar buscador y resultados
-    document.getElementById("buscador").value = "";
-    renderizarTabla([]);
     // Abrir editor vacío para nuevo tip
     abrirEditor("", "", false, null);
   });
@@ -188,8 +208,6 @@ function abrirEditor(
       if (esEdicion) {
         // Restaurar vista previa del tip que se estaba viendo
         panelContenido.innerHTML = vistaPreviaOriginal;
-        // Re-vincular eventos de los botones restaurados
-        reVincularBotonesVista(tipId, tituloInicial, contenidoInicial);
       } else {
         panelContenido.innerHTML = "";
       }
@@ -212,38 +230,19 @@ function abrirEditor(
         const tipActualizado = await editarTip(tipId, titulo, contenido);
         if (tipActualizado) {
           mostrarMensajeExito("¡Tip actualizado exitosamente!");
-          // Recargar datos
-          await cargarTips();
+          // Limpiar búsqueda y recargar lista completa
+          await limpiarYRecargar();
         }
       } else {
         // ── CREAR nuevo tip ──
         const tipCreado = await crearTip(titulo, contenido);
         if (tipCreado) {
           mostrarMensajeExito("¡Tip creado exitosamente!");
-          // Recargar datos
-          await cargarTips();
+          // Limpiar búsqueda y recargar lista completa
+          await limpiarYRecargar();
         }
       }
     });
-}
-
-/**
- * Re-vincula los eventos de editar y eliminar cuando se restaura la vista previa
- */
-function reVincularBotonesVista(tipId, titulo, contenido) {
-  const btnEdit = document.getElementById("btn-editar-actual");
-  if (btnEdit) {
-    btnEdit.addEventListener("click", () => {
-      abrirEditor(titulo, contenido, true, tipId);
-    });
-  }
-
-  const btnDelete = document.getElementById("btn-eliminar-actual");
-  if (btnDelete) {
-    btnDelete.addEventListener("click", () => {
-      manejarEliminacion(tipId, titulo);
-    });
-  }
 }
 
 // ─── ELIMINACIÓN ───────────────────────────────────────────────
@@ -262,12 +261,9 @@ async function manejarEliminacion(id, nombre) {
 
   const eliminado = await eliminarTip(id);
   if (eliminado) {
-    const panelContenido = document.getElementById("contenido");
     mostrarMensajeExito(`Tip "${nombre}" eliminado.`);
-    // Recargar datos y limpiar resultados
-    await cargarTips();
-    renderizarTabla([]);
-    document.getElementById("buscador").value = "";
+    // Limpiar búsqueda y recargar lista completa
+    await limpiarYRecargar();
   }
 }
 
