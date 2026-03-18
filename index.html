@@ -18,24 +18,7 @@
 
       <!-- Acciones sólo visibles en DESKTOP -->
       <div class="sidebar-actions desktop-only">
-        <button id="btn-desplegar-agregar" class="btn-primary">+ Agregar</button>
-        <button id="btn-crear-tip" class="btn-primary">+ Crear</button>
-      </div>
-
-      <!-- Formulario agregar (sólo desktop) -->
-      <div id="form-agregar-container" class="hidden desktop-only">
-        <div class="form-group">
-          <label for="nuevo-nombre">Nombre del Tip:</label>
-          <input type="text" id="nuevo-nombre" placeholder="Ej: Cambiar nombre equipo" />
-        </div>
-        <div class="form-group">
-          <label for="nueva-url">URL de Dropbox:</label>
-          <input type="text" id="nueva-url" placeholder="https://www.dropbox.com/..." />
-        </div>
-        <div class="form-actions">
-          <button id="btn-descargar-json" class="btn-success">Agregar Tip</button>
-          <button id="btn-cancelar-agregar" class="btn-danger">Cancelar</button>
-        </div>
+        <button id="btn-crear-tip" class="btn-primary">+ Crear Tip</button>
       </div>
 
       <hr class="separator desktop-only" />
@@ -70,7 +53,7 @@
     <main id="contenido"></main>
   </div>
 
-  <!-- Sólo Marked.js para renderizar Markdown -->
+  <!-- Marked.js para renderizar Markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="js/script.js" type="module" defer></script>
 </body>

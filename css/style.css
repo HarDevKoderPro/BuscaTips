@@ -551,3 +551,54 @@ main#contenido pre code[class*="language-"] {
     font-size: 0.85rem;
   }
 }
+
+
+/* ====
+   ESTILOS ADICIONALES - Botones de acción en tabla y vista
+   ==== */
+
+/* Botones de acción (editar/eliminar) en cada fila de la tabla */
+.tip-acciones {
+  float: right;
+  display: inline-flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+#resultados tbody tr:hover .tip-acciones {
+  opacity: 1;
+}
+
+.btn-accion-tip {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.btn-accion-tip:hover {
+  background: #1d3b53;
+}
+
+/* Botón eliminar en la vista de contenido */
+.btn-delete-toggle {
+  background-color: transparent;
+  color: #ef5350;
+  border: 1px solid #ef5350;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-right: 10px;
+}
+
+.btn-delete-toggle:hover {
+  background-color: #ef5350;
+  color: #fff;
+}
