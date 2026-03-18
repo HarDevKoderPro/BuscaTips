@@ -7,7 +7,6 @@
 
 import {
   cargarTips,
-  obtenerTodosLosTips,
   filtrarTips,
   buscarTipsAPI,
   crearTip,
@@ -25,11 +24,8 @@ let debounceTimer = null;
 // ─── INICIALIZACIÓN ────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Cargar todos los tips al iniciar
+  // Cargar todos los tips en memoria (sin mostrarlos en el sidebar)
   await cargarTips();
-
-  // Mostrar todos los tips ordenados alfabéticamente al cargar la página
-  mostrarTodosLosTips();
 
   // Configurar buscador (disponible en todas las plataformas)
   configurarBuscador();
@@ -53,23 +49,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-// ─── FUNCIÓN AUXILIAR: MOSTRAR TODOS LOS TIPS ──────────────────
-
 /**
- * Muestra todos los tips ordenados alfabéticamente en la tabla de resultados
- */
-function mostrarTodosLosTips() {
-  const todosLosTips = obtenerTodosLosTips();
-  renderizarTabla(todosLosTips);
-}
-
-/**
- * Limpia el campo de búsqueda y recarga la lista completa de tips
+ * Limpia el campo de búsqueda, el sidebar y recarga los datos en memoria
  */
 async function limpiarYRecargar() {
   document.getElementById("buscador").value = "";
+  document.getElementById("resultados-body").innerHTML = "";
   await cargarTips();
-  mostrarTodosLosTips();
 }
 
 // ─── BUSCADOR ──────────────────────────────────────────────────
@@ -81,10 +67,13 @@ function configurarBuscador() {
   inputBuscador.addEventListener("input", (e) => {
     const texto = e.target.value;
 
-    // Si el campo está vacío, mostrar todos los tips
+    // Siempre cancelar cualquier búsqueda API pendiente al cambiar el input
+    clearTimeout(debounceTimer);
+
+    // Si el campo está vacío, limpiar sidebar y área principal
     if (!texto.trim()) {
+      document.getElementById("resultados-body").innerHTML = "";
       panelContenido.innerHTML = "";
-      mostrarTodosLosTips();
       return;
     }
 
@@ -93,11 +82,14 @@ function configurarBuscador() {
     renderizarTabla(resultadosLocales, texto);
 
     // Debounce para búsqueda en API (más completa, incluye contenido)
-    clearTimeout(debounceTimer);
     debounceTimer = setTimeout(async () => {
-      const resultadosAPI = await buscarTipsAPI(texto);
+      // Verificar que el campo no fue vaciado mientras esperábamos
+      const textoActual = inputBuscador.value.trim();
+      if (!textoActual) return;
+
+      const resultadosAPI = await buscarTipsAPI(textoActual);
       if (resultadosAPI.length > 0) {
-        renderizarTabla(resultadosAPI, texto);
+        renderizarTabla(resultadosAPI, textoActual);
       }
     }, 400);
   });
