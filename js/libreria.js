@@ -192,7 +192,11 @@ export function filtrarTips(textoBusqueda) {
   const palabras = texto.split(/\s+/);
   const filtrados = tipsData.filter((tip) => {
     const nombreLower = tip.nombre.toLowerCase();
-    return palabras.every((p) => new RegExp(`\\b${p}`, "i").test(nombreLower));
+    const contenidoLower = (tip.contenido || "").toLowerCase();
+    // Búsqueda por subcadena: cada palabra debe aparecer en nombre O contenido
+    return palabras.every(
+      (p) => nombreLower.includes(p) || contenidoLower.includes(p)
+    );
   });
   return ordenarAlfabeticamente(filtrados);
 }
@@ -207,8 +211,11 @@ function resaltarCoincidencias(texto, textoBusqueda) {
   const palabras = textoBusqueda.toLowerCase().trim().split(/\s+/);
   let resultado = texto;
   palabras.forEach((p) => {
+    // Escapar caracteres especiales de regex
+    const escaped = p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // Resaltar coincidencias parciales (subcadena, sin \b)
     resultado = resultado.replace(
-      new RegExp(`(\\b${p}\\w*)`, "gi"),
+      new RegExp(`(${escaped})`, "gi"),
       "<mark>$1</mark>"
     );
   });

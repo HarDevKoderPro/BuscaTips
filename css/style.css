@@ -166,16 +166,23 @@ body {
 }
 
 #resultados tbody td {
-  padding: 12px 4px;
+  padding: 0 4px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 #resultados tbody td a {
   color: #d6deeb;
   text-decoration: none;
-  display: block;
-  line-height: 1.4;
-  word-break: normal;
-  overflow-wrap: break-word;
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #resultados tbody td a mark {
@@ -559,9 +566,12 @@ main#contenido pre code[class*="language-"] {
 
 /* Botones de acción (editar/eliminar) en cada fila de la tabla */
 .tip-acciones {
-  float: right;
   display: inline-flex;
-  gap: 4px;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  width: 52px;
+  justify-content: flex-end;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -574,9 +584,10 @@ main#contenido pre code[class*="language-"] {
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 0.85rem;
-  padding: 2px 6px;
+  font-size: 16px;
+  padding: 2px 4px;
   border-radius: 4px;
+  line-height: 1;
   transition: background 0.2s ease;
 }
 
