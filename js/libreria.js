@@ -4,6 +4,10 @@
 // Maneja: carga, búsqueda, CRUD y renderizado de tips
 // API Base: /api/tips.php
 // ============================================================
+// FIX: filtrarTips() ahora solo busca en 'nombre' (lo que el
+//      usuario ve en el sidebar). Se añade filtrarResultadosAPI()
+//      para re-filtrar respuestas del servidor antes de renderizar.
+// ============================================================
 
 // URL base de la API (ajustar si cambia la ubicación)
 const API_URL = "api/tips.php";
@@ -78,6 +82,7 @@ export function obtenerTodosLosTips() {
  * Buscar tips en la API por texto
  * GET /api/tips.php?buscar=texto
  * @param {string} texto - Término de búsqueda
+ * @param {AbortSignal|null} signal - Señal para cancelar la petición
  * @returns {Array} Tips encontrados (ordenados alfabéticamente)
  */
 export async function buscarTipsAPI(texto, signal = null) {
@@ -195,8 +200,10 @@ export async function eliminarTip(id) {
 
 /**
  * Filtrar tips cargados localmente (búsqueda rápida sin API)
- * Se usa para filtrado instantáneo mientras el usuario escribe
- * Resultados ordenados alfabéticamente
+ * FIX: Solo busca en el campo 'nombre' del tip.
+ *      El sidebar muestra nombres, así que el filtro debe coincidir
+ *      con lo que el usuario ve. Evita falsos positivos donde un tip
+ *      aparecía porque su contenido Markdown contenía el término.
  * @param {string} textoBusqueda
  * @returns {Array} Tips filtrados y ordenados
  */
@@ -206,11 +213,30 @@ export function filtrarTips(textoBusqueda) {
   const palabras = textoNorm.split(/\s+/);
   const filtrados = tipsData.filter((tip) => {
     const nombreNorm = normalizarTexto(tip.nombre);
-    const contenidoNorm = normalizarTexto(tip.contenido || "");
-    // Búsqueda por subcadena normalizada: cada palabra debe aparecer en nombre O contenido
-    return palabras.every(
-      (p) => nombreNorm.includes(p) || contenidoNorm.includes(p)
-    );
+    // FIX: Solo buscar en nombre — no en contenido
+    return palabras.every((p) => nombreNorm.includes(p));
+  });
+  return ordenarAlfabeticamente(filtrados);
+}
+
+/**
+ * Re-filtrar resultados devueltos por la API para garantizar que
+ * solo se muestren tips cuyo NOMBRE contenga el texto buscado.
+ * FIX: La API del servidor puede hacer LIKE en nombre+contenido,
+ *      devolviendo tips que coinciden solo en contenido. Esta función
+ *      aplica el mismo criterio que filtrarTips() sobre los resultados
+ *      de la API antes de renderizarlos.
+ * @param {Array} tipsAPI - Tips devueltos por la API
+ * @param {string} textoBusqueda - Texto actual del buscador
+ * @returns {Array} Tips filtrados cuyo nombre coincide
+ */
+export function filtrarResultadosAPI(tipsAPI, textoBusqueda) {
+  if (!textoBusqueda.trim()) return [];
+  const textoNorm = normalizarTexto(textoBusqueda.trim());
+  const palabras = textoNorm.split(/\s+/);
+  const filtrados = tipsAPI.filter((tip) => {
+    const nombreNorm = normalizarTexto(tip.nombre);
+    return palabras.every((p) => nombreNorm.includes(p));
   });
   return ordenarAlfabeticamente(filtrados);
 }

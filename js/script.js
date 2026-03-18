@@ -1,13 +1,18 @@
-// ============================================================
+// ====
 // BuscaTips - Script principal (eventos y lógica de UI)
-// ============================================================
+// ====
 // Conecta la interfaz con las funciones de la API (libreria.js)
 // Maneja: buscador, editor unificado (crear/editar), eliminación
-// ============================================================
+// ====
+// FIX: Los resultados de la API se re-filtran con filtrarResultadosAPI()
+//      antes de renderizar, asegurando consistencia con lo que el
+//      usuario ve en el sidebar (solo coincidencias por nombre).
+// ====
 
 import {
   cargarTips,
   filtrarTips,
+  filtrarResultadosAPI,
   buscarTipsAPI,
   crearTip,
   editarTip,
@@ -25,7 +30,7 @@ let searchVersion = 0;
 // AbortController para cancelar peticiones API en vuelo
 let abortController = null;
 
-// ─── INICIALIZACIÓN ────────────────────────────────────────────
+// ─── INICIALIZACIÓN ────
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Cargar todos los tips en memoria (sin mostrarlos en el sidebar)
@@ -62,7 +67,7 @@ async function limpiarYRecargar() {
   await cargarTips();
 }
 
-// ─── BUSCADOR ──────────────────────────────────────────────────
+// ─── BUSCADOR ────
 
 function configurarBuscador() {
   const inputBuscador = document.getElementById("buscador");
@@ -92,17 +97,19 @@ function configurarBuscador() {
     }
 
     // Filtrado local inmediato (rápido, sin esperar API)
+    // FIX: filtrarTips() ahora solo busca en 'nombre'
     const resultadosLocales = filtrarTips(texto);
     // Solo renderizar si esta sigue siendo la búsqueda vigente
     if (searchVersion === miVersion) {
       renderizarTabla(resultadosLocales, texto);
     }
 
-    // Debounce para búsqueda en API (más completa, incluye contenido)
+    // Debounce para búsqueda en API (más completa, incluye contenido en servidor)
     debounceTimer = setTimeout(async () => {
       // Verificar que seguimos en la misma versión de búsqueda
       if (searchVersion !== miVersion) return;
 
+      // FIX: Leer el valor ACTUAL del input como verificación extra
       const textoActual = inputBuscador.value.trim();
       if (!textoActual) return;
 
@@ -114,8 +121,16 @@ function configurarBuscador() {
 
         // Triple verificación: versión + texto actual coinciden
         if (searchVersion === miVersion && inputBuscador.value.trim() === textoActual) {
-          if (resultadosAPI.length > 0) {
-            renderizarTabla(resultadosAPI, textoActual);
+          // FIX: Re-filtrar resultados de la API para que solo contengan
+          // tips cuyo NOMBRE coincida con la búsqueda. La API del servidor
+          // puede devolver tips que coinciden solo en contenido (LIKE en
+          // nombre+contenido), lo que causaba los falsos positivos.
+          const resultadosFiltrados = filtrarResultadosAPI(resultadosAPI, textoActual);
+
+          // Solo renderizar si hay resultados filtrados; si no, mantener
+          // los resultados locales que ya están en pantalla.
+          if (resultadosFiltrados.length > 0) {
+            renderizarTabla(resultadosFiltrados, textoActual);
           }
         }
       } catch (err) {
@@ -128,7 +143,7 @@ function configurarBuscador() {
   });
 }
 
-// ─── TOGGLE RESULTADOS MOBILE ──────────────────────────────────
+// ─── TOGGLE RESULTADOS MOBILE ────
 
 function configurarToggleResultadosMobile() {
   const btnToggle = document.getElementById("btn-toggle-resultados");
@@ -144,7 +159,7 @@ function configurarToggleResultadosMobile() {
   });
 }
 
-// ─── BOTÓN CREAR (SOLO DESKTOP) ───────────────────────────────
+// ─── BOTÓN CREAR (SOLO DESKTOP) ────
 
 function configurarBotonCrear() {
   const btnCrear = document.getElementById("btn-crear-tip");
@@ -156,7 +171,7 @@ function configurarBotonCrear() {
   });
 }
 
-// ─── EDITOR UNIFICADO (CREAR / EDITAR) ────────────────────────
+// ─── EDITOR UNIFICADO (CREAR / EDITAR) ────
 
 /**
  * Abre el editor en el panel de contenido
@@ -270,7 +285,7 @@ function abrirEditor(
     });
 }
 
-// ─── ELIMINACIÓN ───────────────────────────────────────────────
+// ─── ELIMINACIÓN ────
 
 /**
  * Maneja la eliminación de un tip con confirmación
@@ -292,7 +307,7 @@ async function manejarEliminacion(id, nombre) {
   }
 }
 
-// ─── UTILIDADES ────────────────────────────────────────────────
+// ─── UTILIDADES ────
 
 /**
  * Muestra un mensaje de éxito temporal en el panel de contenido
